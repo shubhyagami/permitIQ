@@ -13,5 +13,6 @@ public class SmartPermitMonitoringSystemApplication {
     }
     // MySQL database is configured in application.yml
     // http://localhost:8080/api/iot/buzzer?email=shubhkumarsinha192@gmail.com
+    //1
 
 }

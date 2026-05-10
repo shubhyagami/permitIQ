@@ -74,5 +74,4 @@ These routes are available for integration with mobile clients or future fronten
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 
 ---
-*Happy Learning! Dive into the code and don't be afraid to experiment.*
 # permitIQ
