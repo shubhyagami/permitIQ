@@ -1,0 +1,20 @@
+services:
+  app:
+    build: .
+    container_name: smart-permit-monitoring-system
+    environment:
+      DB_URL: jdbc:h2:file:/app/data/smart_permit_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE;AUTO_SERVER=TRUE
+      DB_USERNAME: sa
+      DB_PASSWORD:
+      JWT_SECRET: replace-this-docker-secret-with-at-least-32-characters
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      UPLOAD_DIR: /app/uploads
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
+      - h2-data:/app/data
+
+volumes:
+  uploads:
+  h2-data:

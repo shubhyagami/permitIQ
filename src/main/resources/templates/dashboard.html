@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard — Smart Permit Monitoring</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .countdown-box { font-variant-numeric: tabular-nums; }
+        .doc-card { transition: box-shadow 0.2s; }
+        .doc-card:hover { box-shadow: 0 0.5rem 1rem rgba(0,0,0,.12) !important; }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- ========== NAVBAR ========== -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/dashboard}">📄 PermitIQ</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav">
+            <div class="navbar-nav ms-auto gap-1">
+                <a class="btn btn-outline-light btn-sm" th:href="@{/profile}">👤 Profile</a>
+                <a class="btn btn-outline-warning btn-sm" th:href="@{/expiring}">⏳ Expiring</a>
+                <a class="btn btn-success btn-sm" th:href="@{/upload}">⬆ Upload</a>
+                <a th:if="${user.role.name() == 'ROLE_ADMIN'}"
+                   class="btn btn-outline-danger btn-sm" th:href="@{/admin}">🔧 Admin</a>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button class="btn btn-outline-light btn-sm" type="submit">🚪 Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+
+    <!-- ========== HEADER ========== -->
+    <div class="row mb-3">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <h1 class="h3 mb-0">Welcome, <span th:text="${user.name}"></span></h1>
+                    <small class="text-muted" th:text="${user.company} ?: user.email"></small>
+                </div>
+                <a th:href="@{/upload}" class="btn btn-primary">⬆ Upload Document</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FLASH MESSAGES ========== -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- ========== STATS ROW (only when documents exist) ========== -->
+    <div class="row g-3 mb-4" th:if="${!#lists.isEmpty(documents)}" id="statsRow">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100">
+                <div class="card-body py-3">
+                    <p class="text-muted small mb-1 fw-semibold">Total</p>
+                    <h2 class="mb-0 fw-bold" th:text="${#lists.size(documents)}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100 border-start border-success border-4">
+                <div class="card-body py-3">
+                    <p class="text-muted small mb-1 fw-semibold">Active</p>
+                    <h2 class="mb-0 fw-bold text-success" id="activeCount">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100 border-start border-warning border-4">
+                <div class="card-body py-3">
+                    <p class="text-muted small mb-1 fw-semibold">Expiring</p>
+                    <h2 class="mb-0 fw-bold text-warning" id="expiringCount">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100 border-start border-danger border-4">
+                <div class="card-body py-3">
+                    <p class="text-muted small mb-1 fw-semibold">Expired</p>
+                    <h2 class="mb-0 fw-bold text-danger" id="expiredCount">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== EMPTY STATE ========== -->
+    <div th:if="${#lists.isEmpty(documents)}">
+        <div class="text-center py-5 my-5">
+            <div class="display-1 mb-3">📂</div>
+            <h2 class="h4 text-muted mb-2">No documents yet</h2>
+            <p class="text-muted mb-4">Upload your first permit, certificate or insurance paper.</p>
+            <a th:href="@{/upload}" class="btn btn-primary btn-lg px-4">⬆ Upload Your First Document</a>
+            <p class="mt-3 small text-muted">Supported: PDF, JPG, PNG — Max 10 MB</p>
+        </div>
+    </div>
+
+    <!-- ========== DOCUMENT CARDS ========== -->
+    <div class="row g-3" th:if="${!#lists.isEmpty(documents)}">
+        <div class="col-xxl-4 col-lg-6" th:each="document : ${documents}">
+            <div class="card doc-card border-0 shadow-sm h-100">
+
+                <!-- Card Header (colored bar + name + status) -->
+                <div class="card-header d-flex justify-content-between align-items-center py-2 px-3"
+                     th:classappend="${document.status().name() == 'EXPIRED'}
+                        ? ' bg-danger bg-opacity-10 border-bottom border-danger'
+                        : (${document.status().name() == 'EXPIRING_SOON'}
+                        ? ' bg-warning bg-opacity-10 border-bottom border-warning'
+                        : ' bg-success bg-opacity-10 border-bottom border-success')">
+                    <span class="fw-semibold small text-truncate me-2"
+                          th:text="${document.documentName()}"></span>
+                    <span class="badge rounded-pill text-nowrap"
+                          th:classappend="${document.status().name() == 'EXPIRED'}
+                            ? ' bg-danger'
+                            : (${document.status().name() == 'EXPIRING_SOON'}
+                            ? ' bg-warning text-dark'
+                            : ' bg-success')"
+                          th:text="${document.status()}"></span>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body pb-1">
+                    <p class="small text-muted mb-2"
+                       th:text="${document.documentType()} ?: 'No type specified'"></p>
+
+                    <!-- Permit Number -->
+                    <div th:if="${document.permitNumber()}" class="mb-2">
+                        <small class="text-muted d-block">Permit Number</small>
+                        <span class="fw-medium small" th:text="${document.permitNumber()}"></span>
+                    </div>
+
+                    <!-- Dates -->
+                    <div class="row g-1 mb-2">
+                        <div class="col-6" th:if="${document.issueDate()}">
+                            <small class="text-muted d-block">Issued</small>
+                            <span class="fw-medium small" th:text="${document.issueDate()}"></span>
+                        </div>
+                        <div class="col-6" th:if="${document.expiryDate()}">
+                            <small class="text-muted d-block">Expires</small>
+                            <span class="fw-medium small"
+                                  th:classappend="${document.status().name() == 'EXPIRED'} ? ' text-danger' : ''"
+                                  th:text="${document.expiryDate()}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Authority -->
+                    <div th:if="${document.authorityName()}" class="mb-2">
+                        <small class="text-muted d-block">Authority</small>
+                        <span class="fw-medium small" th:text="${document.authorityName()}"></span>
+                    </div>
+
+                    <!-- Countdown Box -->
+                    <div class="countdown-box rounded p-2 text-center mb-2 fw-bold fs-5"
+                         th:classappend="${document.status().name() == 'EXPIRED'}
+                            ? ' bg-danger bg-opacity-10 text-danger'
+                            : (${document.status().name() == 'EXPIRING_SOON'}
+                            ? ' bg-warning bg-opacity-10 text-warning'
+                            : ' bg-success bg-opacity-10 text-success')">
+                        <span class="countdown"
+                              th:attr="data-expiry=${document.expiryDate()}"
+                              th:text="${document.expired()
+                                ? 'EXPIRED'
+                                : (document.remainingDays() + 'd ' + document.remainingHours() + 'h ' + document.remainingMinutes() + 'm')}">
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card Footer (actions) -->
+                <div class="card-footer bg-transparent border-top py-2">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a class="btn btn-outline-secondary btn-sm"
+                           th:href="@{/documents/{id}/edit(id=${document.id()})}">
+                            ✏ Edit
+                        </a>
+                        <form th:action="@{/documents/{id}/delete(id=${document.id()})}" method="post"
+                              onsubmit="return confirm('Remove this document permanently?');">
+                            <button class="btn btn-outline-danger btn-sm" type="submit">🗑 Delete</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+    /* ----- Live Countdown ----- */
+    function renderCountdown(el) {
+        const expiry = el.dataset.expiry;
+        if (!expiry || expiry === '') {
+            el.textContent = 'No expiry set';
+            return;
+        }
+        const target = new Date(expiry + 'T00:00:00');
+        target.setDate(target.getDate() + 1);
+        const diff = target.getTime() - Date.now();
+        if (diff <= 0) {
+            el.textContent = 'EXPIRED';
+            return;
+        }
+        const total = Math.floor(diff / 1000);
+        const d = Math.floor(total / 86400);
+        const h = Math.floor((total % 86400) / 3600);
+        const m = Math.floor((total % 3600) / 60);
+        const s = total % 60;
+        el.textContent = `${d}d ${h}h ${m}m ${s}s`;
+    }
+
+    function tick() {
+        document.querySelectorAll('.countdown').forEach(renderCountdown);
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    /* ----- Stats Counter ----- */
+    function updateStats() {
+        const badges = document.querySelectorAll('.badge.rounded-pill');
+        let active = 0, expiring = 0, expired = 0;
+        badges.forEach(b => {
+            const text = b.textContent.trim();
+            if (text === 'ACTIVE') active++;
+            else if (text === 'EXPIRING_SOON') expiring++;
+            else if (text === 'EXPIRED') expired++;
+        });
+        const ac = document.getElementById('activeCount');
+        const ec = document.getElementById('expiringCount');
+        const ed = document.getElementById('expiredCount');
+        if (ac) ac.textContent = active;
+        if (ec) ec.textContent = expiring;
+        if (ed) ed.textContent = expired;
+    }
+    updateStats();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

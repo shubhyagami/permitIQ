@@ -1,0 +1,46 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: smart-permit-monitoring-system
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/permit_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:5256}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:10MB}
+      max-request-size: ${MAX_REQUEST_SIZE:10MB}
+  thymeleaf:
+    cache: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-this-development-secret-key-with-at-least-32-characters}
+    expiration-millis: ${JWT_EXPIRATION_MILLIS:86400000}
+  upload:
+    dir: ${UPLOAD_DIR:uploads}
+    max-file-size-bytes: ${UPLOAD_MAX_FILE_SIZE_BYTES:10485760}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-3-flash-preview}
+    base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com}
+  reminder:
+    expiring-soon-days: ${EXPIRING_SOON_DAYS:30}
+    status-refresh-cron: ${STATUS_REFRESH_CRON:0 0 * * * *}
+    daily-reminder-cron: ${DAILY_REMINDER_CRON:0 0 9 * * *}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

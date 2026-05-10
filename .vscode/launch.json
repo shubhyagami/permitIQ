@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SmartPermitMonitoringSystemApplication<smart-permit-monitoring-system>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.compliance.dashboard.SmartPermitMonitoringSystemApplication",
+            "projectName": "smart-permit-monitoring-system",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
