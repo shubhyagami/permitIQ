@@ -1,4 +1,4 @@
-# Smart Compliance Dashboard
+# Vehicle Permit System
 
 A simple web application for managing compliance documents with AI-powered text extraction.
 
