@@ -6,10 +6,10 @@ spring:
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss
   datasource:
-    url: ${DB_URL:jdbc:mysql://permit.c7oeqm4qgl5w.ap-south-1.rds.amazonaws.com:3306/permitdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC}
-    username: ${DB_USERNAME:admin}
-    password: ${DB_PASSWORD:B9CEci4ZMBfTwJWVYAnj}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:h2:file:./data/permitdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
   jpa:
     hibernate:
       ddl-auto: ${JPA_DDL_AUTO:update}
