@@ -11,5 +11,5 @@ WORKDIR /app
 RUN mkdir -p /app/uploads
 COPY --from=build /app/target/smart-permit-monitoring-system-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENV SERVER_PORT=${PORT:-8080}
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENV _JAVA_OPTIONS="-Djava.awt.headless=true"
+ENTRYPOINT java -jar app.jar --server.port=${PORT:-8080}
