@@ -14,7 +14,7 @@
     <name>Smart Permit Monitoring System</name>
     <description>Permit and document compliance monitoring backend</description>
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <jjwt.version>0.12.6</jjwt.version>
         <springdoc.version>3.0.3</springdoc.version>
         <google-genai.version>1.0.0</google-genai.version>
