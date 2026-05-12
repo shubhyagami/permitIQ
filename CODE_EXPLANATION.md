@@ -5,7 +5,7 @@
 ## Project Folder Structure
 
 ```
-permitIQ/
+permitIQ///
 │
 ├── .env                          # Your secret keys (Gemini API, DB password)
 ├── pom.xml                       # Maven: libraries & plugins

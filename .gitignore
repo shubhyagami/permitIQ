@@ -1,0 +1,12 @@
+# Maven build output
+/target/
+
+# Spring Boot properties
+/.env
+
+# IDE files
+/.idea/
+*.iml
+
+# Logs
+/*.log

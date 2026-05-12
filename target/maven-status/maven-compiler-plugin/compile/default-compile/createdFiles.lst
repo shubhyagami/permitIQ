@@ -1,5 +1,6 @@
 com\compliance\dashboard\service\impl\DocumentServiceImpl.class
 com\compliance\dashboard\timer\CountdownService.class
+com\compliance\dashboard\controller\AdminRestController$UserUpdateRequest.class
 com\compliance\dashboard\controller\AuthViewController.class
 com\compliance\dashboard\dto\SignupRequest.class
 com\compliance\dashboard\util\SecurityUtil.class
@@ -10,6 +11,7 @@ com\compliance\dashboard\ai\GeminiService.class
 com\compliance\dashboard\security\UserPrincipal.class
 com\compliance\dashboard\service\FileStorageService.class
 com\compliance\dashboard\dto\DocumentUpdateRequest.class
+com\compliance\dashboard\config\WebConfig$1.class
 com\compliance\dashboard\controller\AdminController.class
 com\compliance\dashboard\security\SecurityConfig.class
 com\compliance\dashboard\dto\UserResponse$UserResponseBuilder.class
@@ -27,6 +29,7 @@ com\compliance\dashboard\service\impl\AuthServiceImpl.class
 com\compliance\dashboard\dto\LoginRequest.class
 com\compliance\dashboard\service\FileStorageService$StoredFile.class
 com\compliance\dashboard\ai\GeminiServiceImpl.class
+com\compliance\dashboard\config\WebConfig.class
 com\compliance\dashboard\service\OcrService.class
 com\compliance\dashboard\entity\Document$DocumentBuilder.class
 com\compliance\dashboard\service\impl\ReminderScheduler.class
@@ -42,6 +45,7 @@ com\compliance\dashboard\repository\DocumentRepository.class
 com\compliance\dashboard\dto\CountdownResponse.class
 com\compliance\dashboard\dto\UserResponse.class
 com\compliance\dashboard\service\AuthService.class
+com\compliance\dashboard\controller\AdminRestController.class
 com\compliance\dashboard\controller\DashboardController.class
 com\compliance\dashboard\config\ApplicationProperties$Gemini.class
 com\compliance\dashboard\entity\User$UserBuilder.class
