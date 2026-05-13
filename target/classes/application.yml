@@ -6,10 +6,10 @@ spring:
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss
   datasource:
-    url: ${DB_URL:jdbc:mysql://permit.c7oeqm4qgl5w.ap-south-1.rds.amazonaws.com:3306/permitdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC}
-    username: ${DB_USERNAME:admin}
-    password: ${DB_PASSWORD:B9CEci4ZMBfTwJWVYAnj}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/permit_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:5256}
+    driver-class-name: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
   jpa:
     hibernate:
       ddl-auto: ${JPA_DDL_AUTO:update}
@@ -35,7 +35,7 @@ app:
     dir: ${UPLOAD_DIR:uploads}
     max-file-size-bytes: ${UPLOAD_MAX_FILE_SIZE_BYTES:10485760}
   gemini:
-    api-key: ${GEMINI_API_KEY:}
+    api-key: ${GEMINI_API_KEY:AIzaSyDzbrG3qWOR6utXvVy4NZ3iaMfS_V65364}
     model: ${GEMINI_MODEL:gemini-2.5-flash}
     base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com}
   reminder:

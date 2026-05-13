@@ -16,6 +16,7 @@ com\compliance\dashboard\controller\AdminController.class
 com\compliance\dashboard\security\SecurityConfig.class
 com\compliance\dashboard\dto\UserResponse$UserResponseBuilder.class
 com\compliance\dashboard\entity\DocumentStatus.class
+com\compliance\dashboard\config\DataInitializer.class
 com\compliance\dashboard\service\impl\OcrServiceImpl.class
 com\compliance\dashboard\security\JwtAuthenticationFilter.class
 com\compliance\dashboard\config\ApplicationProperties$Reminder.class
